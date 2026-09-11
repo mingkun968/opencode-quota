@@ -12,6 +12,7 @@
       "!!dist",
       "!!node_modules",
       "!!package-artifacts",
+      "!!gnome-extension",
       "!!references/upstream-plugins",
       "!!src/data/modelsdev-pricing.min.json"
     ]

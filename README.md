@@ -90,6 +90,7 @@ More ways to use it:
 - Check quota anywhere: use `opencode-quota show` in a terminal or the same slash commands in the TUI, Web, and Desktop.
 - Automate quota checks with JSON output for scripts, status bars, and CI. Optional OpenTelemetry metrics support monitoring tools.
 - Customize the display with [`tuiPromptBar.enabled`](docs/readme/configuration.md#tui-settings), OpenCode Go's preferred collapsed-sidebar window, reset precision or spacing, bare percent labels, and [`accountingDetail`](docs/readme/configuration.md#show-accounting-detail).
+- Float remaining quota on your desktop with `opencode-quota widget`: a draggable, always-on-top overlay that shows OpenCode Go's 5h, weekly, and monthly windows. See [Desktop widget](docs/readme/widget.md).
 - Optionally estimate **Runs out ≈ 1h 50m** for supported fixed windows with [`quotaProjection: "runway"`](docs/readme/configuration.md#estimate-when-fixed-quota-runs-out). It is off by default and leaves JSON output unchanged.
 - Choose current-session or descendant-tree token totals. Get reset popups for selected windows with [`resetNotifications`](docs/readme/configuration.md#notify-when-quota-becomes-available-again).
 - Troubleshoot authentication, quota sources, pricing, and maintainer notices.
@@ -124,6 +125,7 @@ Use the CLI for setup, updates, terminal checks, and custom providers.
 | `npx @slkiser/opencode-quota@latest init`                | Set up OpenCode Quota                       |
 | `npx @slkiser/opencode-quota@latest provider add`        | Add or update a custom provider             |
 | `npx @slkiser/opencode-quota@latest show`                | Show current quota                          |
+| `npx @slkiser/opencode-quota@latest widget`              | Open an always-on-top desktop quota overlay |
 | `npx @slkiser/opencode-quota@latest status`              | Check configuration and provider problems  |
 | `npx @slkiser/opencode-quota@latest update`              | Update an existing installation             |
 
@@ -238,6 +240,7 @@ Project guides:
 
 - [Manual install](docs/readme/manual-install.md)
 - [Configuration](docs/readme/configuration.md)
+- [Desktop widget](docs/readme/widget.md)
 - [Providers](docs/readme/providers.md)
 - [Troubleshooting](docs/readme/troubleshooting.md)
 - [External integration](docs/readme/external-integration.md)

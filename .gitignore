@@ -16,6 +16,10 @@ coverage/
 .pnpm-store/
 /package-artifacts/
 
+# Python overlay bytecode
+__pycache__/
+*.pyc
+
 # Local-only config/secrets
 .env
 .env.*

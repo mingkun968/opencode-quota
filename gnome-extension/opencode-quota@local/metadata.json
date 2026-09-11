@@ -1,0 +1,8 @@
+{
+  "uuid": "opencode-quota@local",
+  "name": "OpenCode Quota",
+  "description": "Shows OpenCode provider quota (5h / weekly / monthly) in the top panel, using the local opencode-quota CLI. No network access of its own.",
+  "shell-version": ["45", "46", "47", "48", "49", "50"],
+  "version": 1,
+  "url": "https://github.com/slkiser/opencode-quota"
+}

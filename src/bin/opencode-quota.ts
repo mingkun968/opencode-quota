@@ -10,6 +10,7 @@ const USAGE = [
   "Usage:",
   "  npx @slkiser/opencode-quota init [--dry-run] [--sync-legacy-config]",
   "  npx @slkiser/opencode-quota show [--provider <provider-id>] [--json] [--threshold <pct>]",
+  "  npx @slkiser/opencode-quota widget [--position <corner>] [--provider <provider-id>]",
   "  npx @slkiser/opencode-quota status [--provider <provider-id>] [--json]",
   "  npx @slkiser/opencode-quota update [--dry-run] [--yes]",
   "  npx @slkiser/opencode-quota provider add [--dry-run]",
@@ -23,6 +24,12 @@ const USAGE = [
   "          --json               Machine-readable JSON output (reads from cache)",
   "          --threshold <pct>    With --json, exit 1 if below <pct>%, 2 if incomplete/not comparable",
   "          --provider <id>      Filter to one provider",
+  "  widget  Open an always-on-top desktop overlay with remaining quota",
+  "          --position <corner>  top-right | top-left | bottom-right | bottom-left",
+  "          --provider <id>      Show only one provider",
+  "          --interval <sec>     Refresh interval (default: 60)",
+  "          --x <px> --y <px>    Explicit initial position; overrides --position",
+  "          --print              Print the snapshot JSON and exit",
   "  status  Print Quota Status diagnostics (same data as /quota_status)",
   "          --json               Machine-readable JSON output",
   "          --provider <id>      Filter to one provider",
@@ -85,6 +92,11 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
   if (command === "show") {
     const { runCliShowCommand } = await import("../lib/cli-show.js");
     return await runCliShowCommand({ argv: rest });
+  }
+
+  if (command === "widget") {
+    const { runWidgetCommand } = await import("../lib/widget-command.js");
+    return await runWidgetCommand({ argv: rest });
   }
 
   if (command === "status") {

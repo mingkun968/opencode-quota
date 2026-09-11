@@ -1,0 +1,25 @@
+.quota-panel-label {
+    font-weight: 600;
+    padding: 0 2px;
+}
+
+.quota-ok {
+    color: #8ff0a4;
+}
+
+.quota-warn {
+    color: #f5c211;
+}
+
+.quota-critical {
+    color: #ff6b5e;
+}
+
+.quota-header {
+    font-weight: 700;
+}
+
+.quota-detail {
+    font-size: 0.9em;
+    opacity: 0.85;
+}

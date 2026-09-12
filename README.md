@@ -7,17 +7,57 @@
     </picture>
   </a>
 </p>
-<p align="center">Quota, usage, and token visibility in OpenCode and your terminal.</p>
+<p align="center">在 GNOME 顶栏一行看住你的 AI 套餐额度。</p>
 <p align="center">
   <a href="https://www.npmjs.com/package/@slkiser/opencode-quota"><img alt="npm" src="https://img.shields.io/npm/v/%40slkiser%2Fopencode-quota?style=flat-square" /></a>
   <a href="https://www.npmjs.com/package/@slkiser/opencode-quota"><img alt="npm downloads" src="https://img.shields.io/npm/dm/%40slkiser%2Fopencode-quota?style=flat-square" /></a>
-  <a href="https://github.com/slkiser/opencode-quota/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/slkiser/opencode-quota/ci.yml?style=flat-square&branch=main&label=CI" /></a>
   <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" /></a>
 </p>
 
-[![OpenCode Quota sidebar](https://shawnkiser.com/opencode-quota/opencode-quota-sidebar.webp)](https://github.com/slkiser/opencode-quota)
+## 这个项目是什么
+
+本仓库 fork 自 [slkiser/opencode-quota](https://github.com/slkiser/opencode-quota)，**完整保留上游的取数能力与 CLI**，并新增一个 GNOME 顶部面板扩展：把所有已配置 AI 套餐的剩余额度平铺在任务栏一行，实时刷新。
+
+![顶部面板](docs/readme/images/panel.png)
+
+### 真实功能
+
+- **一行平铺所有套餐**：例如 `Go 5h 100% 7d 85% 30d 62%`；配置了别的套餐就接着排（`ChatGPT 7d 40%`、`Copilot …`）。
+- **分段实时着色**：每个窗口按剩余比例独立上色，≥50% 绿、20–49% 黄、<20% 红；套餐名取该套餐最紧张窗口的颜色。
+- **30 秒实时刷新**：菜单里可切 30 秒 / 1 分钟 / 5 分钟；只调用各家的用量接口，**不消耗 token**。
+- **点击看明细**：逐窗口列出剩余百分比与重置倒计时，并提供「面板位置」「刷新间隔」「立即刷新」。
+- **面板位置可调**：左 / 中 / 右一键切换并记忆（GNOME 状态区不支持鼠标拖动图标）。
+- **25 种套餐**：OpenCode Go/Zen、ChatGPT(OpenAI)、GitHub Copilot、Claude、Cursor、xAI、Z.ai、Zhipu、Kimi、MiniMax、Qwen Code、DeepSeek、OpenRouter、Kilo、NanoGPT、Ollama Cloud 等；其他套餐可用 `opencode-quota provider add` 接任意返回 JSON 的接口。
+- **网络抖动不白屏**：请求失败保留上一次成功数据，错误显示在菜单底部。
+
+### 安装（GNOME 面板）
+
+```bash
+git clone https://github.com/mingkun968/opencode-quota
+cd opencode-quota
+corepack pnpm install
+corepack pnpm run build
+corepack pnpm run install:gnome-extension   # 复制扩展到 ~/.local/share/gnome-shell/extensions
+gnome-extensions enable opencode-quota@local
+```
+
+> GNOME Shell 会缓存扩展模块：首次安装或改过扩展代码后，需要**注销并重新登录**（Wayland）才会加载。
+
+### 桌面悬浮窗（可选）
+
+不想占用任务栏时，也可以开一个可拖动的置顶小窗，显示彩色进度条与剩余百分比：
+
+![桌面悬浮窗](docs/readme/images/widget.png)
+
+```bash
+node dist/bin/opencode-quota.js widget
+```
+
+更多参数见 [Desktop widget](docs/readme/widget.md)。
 
 ---
+
+以下为上游 opencode-quota 的完整文档，本仓库同样适用。
 
 ## Quick start
 

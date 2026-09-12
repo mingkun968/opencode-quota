@@ -265,31 +265,6 @@ function parseSnapshot(payload) {
     };
 }
 
-function buildPanelLabel(provider) {
-    const parts = provider.entries
-        .filter(entry => entry.percent !== null)
-        .map(entry => `<span foreground="${hexFor(entry.percent)}">` +
-            `${escapeMarkup(shortWindowLabel(entry.label))} ${formatPercent(entry.percent)}</span>`);
-    if (parts.length === 0)
-        return escapeMarkup(provider.name);
-    return `${escapeMarkup(provider.name)} ${parts.join('  ')}`;
-}
-
-function escapeMarkup(text) {
-    return String(text)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-}
-
-function hexFor(percent) {
-    if (percent < 20)
-        return '#ff6b5e';
-    if (percent < 50)
-        return '#f5c211';
-    return '#8ff0a4';
-}
-
 const QuotaPanelButton = GObject.registerClass(
 class QuotaPanelButton extends PanelMenu.Button {
     _init(options = {}) {
@@ -304,12 +279,10 @@ class QuotaPanelButton extends PanelMenu.Button {
         this._onMove = options.onMove ?? null;
         this._onRefreshSecondsChange = options.onRefreshSecondsChange ?? null;
 
-        this._label = new St.Label({
-            text: 'Quota …',
+        this._label = new St.BoxLayout({
             y_align: Clutter.ActorAlign.CENTER,
-            style_class: 'quota-panel-label',
         });
-        this._label.clutter_text.set_use_markup(true);
+        this._label.add_child(this._panelLabel('Quota …', null));
         this.add_child(this._label);
 
         this._render();
@@ -384,7 +357,7 @@ class QuotaPanelButton extends PanelMenu.Button {
         const snapshot = this._snapshot;
 
         if (!snapshot || snapshot.providers.length === 0) {
-            this._setLabel(this._error ? 'Quota !' : 'Quota –', 'quota-critical');
+            this._setErrorLabel(this._error ? 'Quota !' : 'Quota –');
             const item = new PopupMenu.PopupMenuItem(
                 this._error ?? 'No quota data. Is the opencode-quota CLI installed?',
                 {reactive: false});
@@ -392,8 +365,7 @@ class QuotaPanelButton extends PanelMenu.Button {
         } else {
             const go = snapshot.providers.find(provider => provider.id === 'opencode-go');
             const panelProvider = go ?? snapshot.providers[0];
-            const severity = severityClass(panelProvider.lowest?.percent ?? 100);
-            this._setLabel(buildPanelLabel(panelProvider), severity);
+            this._setProviderLabel(panelProvider);
 
             for (const provider of snapshot.providers) {
                 const header = new PopupMenu.PopupMenuItem(provider.name, {reactive: false});
@@ -461,11 +433,38 @@ class QuotaPanelButton extends PanelMenu.Button {
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
     }
 
-    _setLabel(text, styleClass) {
-        this._label.text = text;
-        for (const name of ['quota-ok', 'quota-warn', 'quota-critical'])
-            this._label.remove_style_class_name(name);
-        this._label.add_style_class_name(styleClass);
+    _panelLabel(text, severity) {
+        const label = new St.Label({
+            text,
+            y_align: Clutter.ActorAlign.CENTER,
+            style_class: 'quota-panel-label',
+        });
+        if (severity)
+            label.add_style_class_name(severity);
+        return label;
+    }
+
+    _clearLabel() {
+        this._label.destroy_all_children();
+    }
+
+    _setErrorLabel(text) {
+        this._clearLabel();
+        this._label.add_child(this._panelLabel(text, 'quota-critical'));
+    }
+
+    _setProviderLabel(provider) {
+        this._clearLabel();
+        this._label.add_child(this._panelLabel(
+            provider.name,
+            severityClass(provider.lowest?.percent ?? 100)));
+        for (const entry of provider.entries) {
+            if (entry.percent === null)
+                continue;
+            this._label.add_child(this._panelLabel(
+                `${shortWindowLabel(entry.label)} ${formatPercent(entry.percent)}`,
+                severityClass(entry.percent)));
+        }
     }
 
     destroy() {

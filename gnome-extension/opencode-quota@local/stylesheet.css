@@ -3,6 +3,12 @@
     padding: 0 2px;
 }
 
+.quota-provider-name {
+    font-weight: 700;
+    padding-left: 8px;
+    padding-right: 3px;
+}
+
 .quota-ok {
     color: #8ff0a4;
 }

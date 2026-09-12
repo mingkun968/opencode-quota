@@ -189,9 +189,21 @@ const WINDOW_SHORT_NAMES = {
 };
 
 function shortName(providerId) {
-    if (SHORT_NAMES[providerId])
-        return SHORT_NAMES[providerId];
-    const head = providerId.split(/[-_.]/)[0];
+    const raw = String(providerId ?? 'provider');
+    if (SHORT_NAMES[raw])
+        return SHORT_NAMES[raw];
+
+    // Providers without a canonical id fall back to their display name
+    // ("OpenCode Go" -> "opencode-go" -> "Go", "GitHub Copilot" -> "Copilot").
+    const normalized = raw.toLowerCase().replace(/\s+/g, '-');
+    if (SHORT_NAMES[normalized])
+        return SHORT_NAMES[normalized];
+    for (const [key, short] of Object.entries(SHORT_NAMES)) {
+        if (normalized.includes(key))
+            return short;
+    }
+
+    const head = normalized.split(/[-_.]/)[0];
     return head.charAt(0).toUpperCase() + head.slice(1, 6);
 }
 
@@ -251,12 +263,8 @@ function parseSnapshot(payload) {
         providers.push({id: providerId, name: shortName(providerId), entries, lowest});
     }
 
-    providers.sort((a, b) => {
-        const av = a.lowest?.percent ?? 101;
-        const bv = b.lowest?.percent ?? 101;
-        return av - bv;
-    });
-
+    // Keep the CLI payload order: it is stable across refreshes, which matters
+    // when several providers are tiled on one panel line.
     return {
         providers,
         exportedAt: typeof payload.generatedAt === 'number'
@@ -326,11 +334,9 @@ class QuotaPanelButton extends PanelMenu.Button {
             return;
         this._busy = true;
         try {
-            // `widget --print --live` performs a real provider refresh and
-            // returns the exact 5h / weekly / monthly windows, without a window.
-            const result = await runCli([
-                'widget', '--provider', 'opencode-go', '--print', '--live',
-            ]);
+            // `widget --print --live` performs a real provider refresh for every
+            // configured plan and returns their windows without opening a window.
+            const result = await runCli(['widget', '--print', '--live']);
             if (result.code !== 0)
                 throw new Error(result.stderr.trim() || `widget --print exited with ${result.code}`);
 
@@ -363,9 +369,7 @@ class QuotaPanelButton extends PanelMenu.Button {
                 {reactive: false});
             this.menu.addMenuItem(item);
         } else {
-            const go = snapshot.providers.find(provider => provider.id === 'opencode-go');
-            const panelProvider = go ?? snapshot.providers[0];
-            this._setProviderLabel(panelProvider);
+            this._setProvidersLabel(snapshot.providers);
 
             for (const provider of snapshot.providers) {
                 const header = new PopupMenu.PopupMenuItem(provider.name, {reactive: false});
@@ -453,17 +457,21 @@ class QuotaPanelButton extends PanelMenu.Button {
         this._label.add_child(this._panelLabel(text, 'quota-critical'));
     }
 
-    _setProviderLabel(provider) {
+    _setProvidersLabel(providers) {
         this._clearLabel();
-        this._label.add_child(this._panelLabel(
-            provider.name,
-            severityClass(provider.lowest?.percent ?? 100)));
-        for (const entry of provider.entries) {
-            if (entry.percent === null)
-                continue;
-            this._label.add_child(this._panelLabel(
-                `${shortWindowLabel(entry.label)} ${formatPercent(entry.percent)}`,
-                severityClass(entry.percent)));
+        for (const provider of providers) {
+            const name = this._panelLabel(
+                provider.name,
+                severityClass(provider.lowest?.percent ?? 100));
+            name.add_style_class_name('quota-provider-name');
+            this._label.add_child(name);
+            for (const entry of provider.entries) {
+                if (entry.percent === null)
+                    continue;
+                this._label.add_child(this._panelLabel(
+                    `${shortWindowLabel(entry.label)} ${formatPercent(entry.percent)}`,
+                    severityClass(entry.percent)));
+            }
         }
     }
 

@@ -30,7 +30,7 @@ describe("v4 migration documentation contract", () => {
     expect(migration).toContain("[← Back to README](../../README.md)");
     expect(migration).toContain("OpenCode 1.4.3 or newer");
     expect(migration).toContain("Node.js 22 or newer");
-    expect(readme).toContain("[v4 migration guide](docs/readme/v4-migration.md)");
+    expect(readme).toContain("[v4 迁移指南](docs/readme/v4-migration.md)");
   });
 
   it("explains the user-visible provider and JSON changes", () => {

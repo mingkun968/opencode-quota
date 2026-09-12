@@ -52,14 +52,14 @@ describe("quota provider Phase 7 documentation consistency", () => {
     const manualInstall = read("docs/readme/manual-install.md");
     const migration = read("docs/readme/v4-migration.md");
 
-    const readmeCommands = readMarkdownSection(readme, /^Commands$/);
-    const readmeCustomProviders = readMarkdownSection(readme, /^Custom providers$/);
+    const readmeCommands = readMarkdownSection(readme, /^常用命令$/);
+    const readmeCustomProviders = readMarkdownSection(readme, /^自定义套餐$/);
     const configurationCustomProviders = readMarkdownSection(configuration, /^Custom providers$/);
     const providerGuideCustomProviders = readMarkdownSection(providers, /^Custom providers$/);
     const troubleshootingProviderFixes = readMarkdownSection(troubleshooting, /^Provider fixes$/);
     const externalJsonBasics = readMarkdownSection(external, /^JSON basics$/);
 
-    const providerAddCommand = "npx @slkiser/opencode-quota@latest provider add";
+    const providerAddCommand = "opencode-quota provider add";
     expect(readmeCommands).toContain(providerAddCommand);
     expect(readmeCustomProviders).toContain(providerAddCommand);
     expect(
@@ -205,7 +205,7 @@ describe("quota provider Phase 7 documentation consistency", () => {
   });
 
   it("links to the authoritative external references used by the README", () => {
-    const referenceSection = readMarkdownSection(read("README.md"), /^Reference$/);
+    const referenceSection = readMarkdownSection(read("README.md"), /^文档$/);
 
     for (const url of [
       "https://opencode.ai/docs/",

@@ -135,7 +135,17 @@ OpenCode 内斜杠命令：
 两点说明：
 
 - 顶栏只平铺**带百分比**的额度行；纯余额 / 金额类（例如 DeepSeek 余额）目前不出现在面板上，CLI 与菜单仍可查看。
-- 任意返回 JSON 的套餐都可以通过 `provider add` 接入，字段映射细节见[套餐与自定义 provider](docs/readme/providers.md)。
+- Gemini CLI 已废弃：现有 v4 配置仍可用，计划在 v5.0.0 移除；新安装请改用其他套餐。
+
+## 自定义套餐
+
+任意返回 JSON 的套餐都可以接入：
+
+```bash
+opencode-quota provider add
+```
+
+向导会先预览改动再保存；字段映射、限额与安全约束见[套餐与自定义 provider](docs/readme/providers.md#custom-providers)。
 
 ## 更新
 
@@ -165,6 +175,15 @@ npm install -g .
 - [外部集成（JSON / 脚本 / CI）](docs/readme/external-integration.md)
 - [手动安装](docs/readme/manual-install.md)
 - [v4 迁移指南](docs/readme/v4-migration.md)
+
+外部参考：
+
+- [OpenCode 文档](https://opencode.ai/docs/)
+- [OpenCode 配置](https://opencode.ai/docs/config/)
+- [OpenCode 插件](https://opencode.ai/docs/plugins/)
+- [OpenCode TUI](https://opencode.ai/docs/tui/)
+- [models.dev 计价数据](https://models.dev/)
+- [Node.js 下载](https://nodejs.org/en/download)
 
 ## 说明
 

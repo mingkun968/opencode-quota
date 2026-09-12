@@ -21,10 +21,10 @@ describe("Gemini CLI deprecation documentation", () => {
   const migration = read("docs/readme/v4-migration.md");
 
   it("marks Gemini CLI as deprecated without removing existing setup instructions", () => {
-    expect(readme).toContain("Gemini CLI (deprecated)");
-    expect(readme).toContain("[Existing setups only]");
-    expect(readme).toContain("Existing v4 configurations still work");
-    expect(readme).toContain("removal planned for v5.0.0");
+    expect(readme).toContain("Gemini CLI（已废弃）");
+    expect(readme).toContain("仅旧配置");
+    expect(readme).toContain("现有 v4 配置仍可用");
+    expect(readme).toContain("v5.0.0");
 
     const providerSection = section(providers, '<a id="gemini-cli"></a>', '<a id="deepseek"></a>');
     expect(providerSection).toContain("### Gemini CLI (deprecated)");

@@ -21,6 +21,8 @@
 
 ## Quick start
 
+Using Pi without the OpenCode application? See the standalone [Pi Quota GNOME integration](integrations/pi-quota/README.md), which reads Pi credentials and requires only Python 3.
+
 ```bash
 npx @slkiser/opencode-quota init
 ```

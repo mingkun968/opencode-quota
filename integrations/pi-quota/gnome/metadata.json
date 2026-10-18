@@ -1,0 +1,7 @@
+{
+  "uuid": "opencode-quota@local",
+  "name": "Pi Quota",
+  "description": "使用 Pi 登录信息显示 Go 套餐额度，无需 OpenCode 软件。",
+  "shell-version": ["45", "46", "47", "48", "49", "50"],
+  "version": 2
+}
